@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: s13-training-camps
+    runtime: docker
+    plan: free
+    branch: develop
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit
