@@ -12,7 +12,7 @@ The `app` container provides everything:
 - Enrollment API
 - File-based demo persistence through the `app-data` Docker volume
 
-The application uses only the Node.js standard library and has no package dependencies. The GitHub Actions workflow builds and pushes the Docker image on every branch push to Docker Hub as `devopseasylearning/s13-training-camps`, tagged with the full commit SHA and `latest`. It then starts the pushed image on the runner, checks the health and courses APIs, and shows the container status and logs in the Actions run.
+The application uses only the Node.js standard library and has no package dependencies. GitHub Actions builds the Docker image on every branch push and pull request, then starts it on a GitHub-hosted runner and checks the health and courses APIs.
 
 ## Tools used
 
@@ -50,4 +50,4 @@ Use `docker volume rm s13-training-camps-data` only when you intentionally want 
 
 ## CI/CD
 
-`.github/workflows/docker-build.yml` builds and pushes the image to Docker Hub on every branch push using GitHub's hosted runner, then runs a temporary smoke-test container. The container only runs for the duration of the CI job; this is not a persistent deployment. Add a Docker Hub access token with write permission as the `DOCKERHUB_TOKEN` Actions repository secret. The Docker Hub repository `devopseasylearning/s13-training-camps` must exist and allow pushes.
+`.github/workflows/docker-build.yml` builds the image on every branch push and pull request using a GitHub-hosted runner, then runs a temporary smoke-test container. The image is not pushed to Docker Hub, and the container only runs for the duration of the CI job; this is not a persistent deployment.
