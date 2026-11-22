@@ -42,3 +42,28 @@ jobs:
 
           docker logs s13-training-camps-ci
           exit 1
+
+      - name: Capture website screenshot
+        id: screenshot
+        run: |
+          npx --yes playwright@1.56.1 install --with-deps chromium
+          npx --yes playwright@1.56.1 screenshot \
+            --browser chromium \
+            --full-page \
+            http://127.0.0.1:8080 \
+            s13-training-camps.png
+
+      - name: Upload website screenshot
+        id: upload-screenshot
+        if: always() && steps.screenshot.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: s13-training-camps-screenshot
+          path: s13-training-camps.png
+          if-no-files-found: error
+
+      - name: Link screenshot in job summary
+        if: steps.upload-screenshot.outcome == 'success'
+        env:
+          SCREENSHOT_URL: ${{ steps.upload-screenshot.outputs.artifact-url }}
+        run: echo "[Download the website screenshot](${SCREENSHOT_URL})" >> "$GITHUB_STEP_SUMMARY"
